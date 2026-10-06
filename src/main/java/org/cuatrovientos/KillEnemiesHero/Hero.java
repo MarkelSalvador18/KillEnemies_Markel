@@ -5,6 +5,14 @@ public class Hero implements Character {
 	public boolean isEnemy() {
 		return false;
 	}
+	private String nombre;
+	
+	
+	
+	public Hero(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	int contadorDeEnemigosMatados;
 	public void attack(Enemy enemy) {
 		
