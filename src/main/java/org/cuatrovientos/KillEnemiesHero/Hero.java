@@ -25,4 +25,8 @@ public class Hero implements Character {
 		System.out.println("¡He defendido a un amigo");
 		contadorDeAmigosDefendidos = contadorDeAmigosDefendidos + 1;
 	}
+	public void heal() {
+		System.out.println("¡Te he curado!");
+	}
+	
 }
