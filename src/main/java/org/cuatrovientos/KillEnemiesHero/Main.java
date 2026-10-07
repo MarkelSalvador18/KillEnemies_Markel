@@ -1,32 +1,42 @@
 package org.cuatrovientos.KillEnemiesHero;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
-
+	
 	public static void main(String[] args) {
 		
-		ArrayList<Character> listaDePersonajes = new ArrayList<Character>();
+		ArrayList<Character> listaDePersonajes;
 		Scanner scn = new Scanner(System.in);
+		File archivo = new File("juego.dat");
 		boolean continua = false;
 		
-		System.out.println("Bienvenido al mundo de Pamplona, te dejo un pequeño resumen sobre el mundo:");
-		System.out.println("Año 1512, una guerra que lleva 10 años en pie");
-		System.out.println("Existen dos bandos: La última llama y El imperio Carmesi");
-		System.out.println("Perteneces al bando de La última llama y debes elegir un rol para ayudar a ganar la guerra");
+		if (archivo.exists()) {
+			System.out.println("Cargando partida...");
+			FileInputStream file = new FileInputStream("juego.dat");
+			ObjectInputStream objectInput = new ObjectInputStream(file);
+			listaDePersonajes = (ArrayList<Character>) objectInput.readObject();
+			objectInput.close();
+		} else {
+			System.out.println("Creando nuevos personajes...");
+            listaDePersonajes = new ArrayList<>();
+		}
 		
+		String nombreDelHeroe;
 		do {
-			System.out.println("Debes elegir personaje: ");
-			System.out.println("");
 			
-			String texto;
 			System.out.print("Introduce el nombre del Hero: ");
-			texto = scn.nextLine();
-			if (texto != null) {
+			nombreDelHeroe = scn.nextLine();
+			if (nombreDelHeroe != null) {
 				continua = true;
-				System.out.println("¡Acaba con los enemigos " + texto + "!");
+				System.out.println("¡Acaba con los enemigos " + nombreDelHeroe + "!");
 			}
 		} while (continua);
 		
@@ -40,12 +50,63 @@ public class Main {
 		Collections.shuffle(listaDePersonajes);
 		
 		String txt = "";
-		
-		for (Character per : listaDePersonajes) {
-			if (per.isEnemy()) {
-				System.out.println("Quedan enemigos, quieres matarlo?(S/N)");
-				txt = scn.nextLine()
-			}
+		boolean quiereMatar = false;
+		boolean tienePiedad = false;
+		for (int i = 0; i < listaDePersonajes.size(); i++) {
+		    Character per = listaDePersonajes.get(i);
+
+		    if (per.isEnemy()) {
+		        boolean respuestaValida = false;
+		        
+		        do {
+		            System.out.println("El personaje " + i + " es un enemigo. ¿Quieres matarlo? (S/N)");
+		            	txt = scn.nextLine();
+
+		            if (txt.equalsIgnoreCase("S")) {
+		                Enemy enemigo = (Enemy) per;
+		                enemigo.kill();
+		                
+		                listaDePersonajes.remove(i);
+		                i = i-1; 
+		                
+		                System.out.println("¡Este enemigo ha muerto!");
+		                respuestaValida = true;
+		            } else if (txt.equalsIgnoreCase("N")) {
+		                System.out.println("Vaya... Tenemos un héroe llamado " + nombreDelHeroe + " con piedad!");
+		               
+		                listaDePersonajes.add(per);
+		                System.out.println("¡Al dejarlo con vida, el enemigo se ha duplicado al final de la lista!");
+		                
+		                respuestaValida = true;
+		            } else {
+		                System.out.println("Introduce bien la opción (S/N)");
+		            }
+		        } while (!respuestaValida);
+
+		    } else {
+		        boolean respuestaValida = false;
+
+		        do {
+		            System.out.println("El personaje " + i + " es un amigo. ¿Quieres defenderlo? (S/N)");
+		            txt = scn.nextLine();
+
+		            if (txt.equalsIgnoreCase("S")) {
+		                System.out.println("¡Buena elección!");
+		                System.out.println("Gracias " + nombreDelHeroe + ", ¡has defendido a tu amigo!");
+		                respuestaValida = true;
+		            } else if (txt.equalsIgnoreCase("N")) {
+		                System.out.println("Al parecer " + nombreDelHeroe + " quiere matar a un amigo...");
+		                
+		                listaDePersonajes.remove(i);
+		                i = i-1;
+		                
+		                System.out.println("Has matado a tu amigo.");
+		                respuestaValida = true;
+		            } else {
+		                System.out.println("Introduce bien la opción (S/N)");
+		            }
+		        } while (!respuestaValida);
+		    }
 		}
 		
 		int contadorDeEnemigos = 0;
@@ -62,6 +123,12 @@ public class Main {
 		System.out.println("Amigos actuales: " + contadorDeAmigos);
 		
 		showCharacters(listaDePersonajes);
+		FileOutputStream fileOutput = new FileOutputStream("juego.dat");
+		ObjectOutputStream objectOutput = new ObjectOutputStream(fileOutput);
+		
+		objectOutput.writeObject(listaDePersonajes);
+		objectOutput.close();
+		System.out.println("Se ha guardado la partida");
 	}
 
 	public static void showCharacters(ArrayList<Character> lista) {
@@ -74,4 +141,6 @@ public class Main {
 			}
 		}
 	}
+	
+	
 }

@@ -7,8 +7,6 @@ public class Hero implements Character {
 	}
 	private String nombre;
 	
-	
-	
 	public Hero(String nombre) {
 		this.nombre = nombre;
 	}
