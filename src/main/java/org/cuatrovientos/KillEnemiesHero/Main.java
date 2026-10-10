@@ -59,7 +59,7 @@ public class Main {
 		        boolean respuestaValida = false;
 		        
 		        do {
-		            System.out.println("El personaje " + numeroPersonaje + " es un enemigo. ¿Quieres matarlo? (S/N)");
+		            System.out.print("El personaje " + numeroPersonaje + " es un enemigo. ¿Quieres matarlo? (S/N) ");
 		            txt = scn.nextLine();
 
 		            if (txt.equalsIgnoreCase("S")) {
