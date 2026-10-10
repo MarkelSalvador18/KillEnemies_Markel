@@ -10,8 +10,8 @@ public  class Berserk implements Character, Serializable {
     }
 
 
-    public void ataqueMatadragones() {
-        System.out.println("¡CLANG! Guts blande la Matadragones gritando: ¡GRIFFITH!");
+    public void ataqueMatadragones(String nombreHeroe) {
+    	System.out.println("¡CLANG! Guts blande la Matadragones gritando: ¡" + nombreHeroe.toUpperCase() + "!");
         System.out.println("¡El poder del Berserker arrasa con el campo de batalla!");
     }
 	

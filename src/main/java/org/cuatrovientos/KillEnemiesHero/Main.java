@@ -33,6 +33,7 @@ public class Main {
 			for (int i = 0; i < 5; i++) {
 				listaDePersonajes.add(new Enemy());
 			}
+			listaDePersonajes.add(new Berserk());
 			Collections.shuffle(listaDePersonajes);
 		}
 
@@ -58,13 +59,25 @@ public class Main {
 		    if (per.isEnemy()) {
 		        boolean respuestaValida = false;
 		        
+		        if (per instanceof Berserk) {
+		            System.out.println("------------------------------------------------");
+		            System.out.println("¡ATENCIÓN! El personaje " + numeroPersonaje + " es BERSERK");
+		            Berserk berserk = (Berserk) per;
+		            berserk.ataqueMatadragones(nombreDelHeroe);
+		            System.out.println("------------------------------------------------");
+		        }
+
 		        do {
 		            System.out.print("El personaje " + numeroPersonaje + " es un enemigo. ¿Quieres matarlo? (S/N) ");
 		            txt = scn.nextLine();
 
 		            if (txt.equalsIgnoreCase("S")) {
-		                Enemy enemigo = (Enemy) per;
-		                enemigo.kill();
+		                if (per instanceof Berserk) {
+		                    System.out.println("¡Has logrado vencer al Berserker tras una batalla encarnizada!");
+		                } else if (per instanceof Enemy) {
+		                    Enemy enemigo = (Enemy) per;
+		                    enemigo.kill();
+		                }
 		                
 		                listaDePersonajes.remove(i);
 		                i = i - 1;
@@ -87,7 +100,7 @@ public class Main {
 		        boolean respuestaValida = false;
 
 		        do {
-		            System.out.println("El personaje " + numeroPersonaje + " es un amigo. ¿Quieres defenderlo? (S/N)");
+		            System.out.print("El personaje " + numeroPersonaje + " es un amigo. ¿Quieres defenderlo? (S/N)");
 		            txt = scn.nextLine();
 
 		            if (txt.equalsIgnoreCase("S")) {
@@ -103,7 +116,7 @@ public class Main {
 		                System.out.println("Has matado a tu amigo.");
 		                respuestaValida = true;
 		            } else {
-		                System.out.println("Introduce bien la opción (S/N)");
+		                System.out.print("Introduce bien la opción (S/N)");
 		            }
 		        } while (!respuestaValida);
 		    }
